@@ -119,6 +119,18 @@ class PandasExpectations(pd.DataFrame):
                 print(f"{value} is not in {set_}")
                 value_is_in_set.append(False)
         return all(value_is_in_set)
+
+    def expect_column_values_to_be_a_subset_of(self, colname: str, superset: set[Any]) -> bool:
+        values_not_in_superset = []
+        for value in self[colname].unique():
+            if value not in superset:
+                values_not_in_superset.append(value)
+        if len(values_not_in_superset) == 0:
+            return True
+        else:
+            for value in values_not_in_superset:
+                print(f"Value {value} is in column {colname} but it should not be.")
+            return False
     
     def expect_column_values_to_not_be_in_set(self, colname: str, set_: set) -> bool:
         value_in_set = []
